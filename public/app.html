@@ -512,7 +512,7 @@ $('ksk').innerHTML = $('sk').innerHTML;
   s2.id = 'aboutScreen';
   s2.setAttribute('aria-label', 'about us');
   s2.style.cssText = 'position:absolute;inset:0;z-index:50;background:#000;opacity:0;pointer-events:none;overflow:hidden;transition:none;--about-foreground:#fff';
-  s2.innerHTML = '<h1 id="aboutTitle" dir="ltr" style="position:absolute;left:150px;right:150px;top:25px;margin:0;text-align:center;color:var(--about-foreground);font:800 44px Cairo,sans-serif;letter-spacing:0;opacity:0">about us</h1><img id="aboutPortrait" alt="الصورة الشخصية" draggable="false" style="position:absolute;left:568px;top:52px;width:401px;height:587px;object-fit:cover;object-position:center;display:block;border-radius:24px;cursor:pointer;box-shadow:0 10px 40px rgba(0,0,0,.5)" src="/__l5e/assets-v1/7e261ae7-383a-4912-8be0-7b399f008bcf/about-photo.jpg"><audio id="aboutMusic" preload="auto" src="/__l5e/assets-v1/cc268c54-e72f-401f-96a9-7bcec8ed6ef6/careless-whisper.mp3"></audio><button id="aboutHome" aria-label="الرئيسية" style="position:absolute;right:28px;top:28px;width:84px;height:76px;border-radius:24px;border:4px solid #1b9bf2;background:linear-gradient(#3cbcff,#0e86e0);box-shadow:0 6px 0 #0a5a9c;cursor:pointer;display:grid;place-items:center;padding:0;z-index:3"><svg viewBox="0 0 24 24" width="46" height="46" fill="#fff"><path d="M12 3 2 12h3v8h5v-6h4v6h5v-8h3z"/></svg></button>';
+  s2.innerHTML = '<h1 id="aboutTitle" dir="ltr" style="position:absolute;left:150px;right:150px;top:25px;margin:0;text-align:center;color:var(--about-foreground);font:800 44px Cairo,sans-serif;letter-spacing:0;opacity:0">about us</h1><img id="aboutPortrait" alt="الصورة الشخصية" draggable="false" style="position:absolute;left:115px;top:100px;width:1306px;height:570px;object-fit:cover;object-position:center;display:block;border-radius:24px;cursor:pointer;box-shadow:0 10px 40px rgba(0,0,0,.5)" src="/__l5e/assets-v1/e80a0aef-4a65-4a0b-b7f1-821176eb4b28/about-photo.jpg"><audio id="aboutMusic" preload="auto" src="/__l5e/assets-v1/7f448ce5-82c5-4f18-b710-9249ec9b92f9/careless-whisper.mp3"></audio><button id="aboutHome" aria-label="الرئيسية" style="position:absolute;right:28px;top:28px;width:84px;height:76px;border-radius:24px;border:4px solid #1b9bf2;background:linear-gradient(#3cbcff,#0e86e0);box-shadow:0 6px 0 #0a5a9c;cursor:pointer;display:grid;place-items:center;padding:0;z-index:3"><svg viewBox="0 0 24 24" width="46" height="46" fill="#fff"><path d="M12 3 2 12h3v8h5v-6h4v6h5v-8h3z"/></svg></button>';
   s2.dataset.phase = 'idle';
   stage.appendChild(s2);
 
@@ -653,8 +653,8 @@ $('ksk').innerHTML = $('sk').innerHTML;
 
   const aboutHome = s2.querySelector('#aboutHome');
   const POS = {
-    big:  {left:'568px',top:'52px',width:'401px',height:'587px',borderRadius:'24px'},   // 85%
-    mid:  {left:'674px',top:'207px',width:'188px',height:'276px',borderRadius:'20px'},   // 40%
+    big:  {left:'115px',top:'100px',width:'1306px',height:'570px',borderRadius:'24px'},   // 85%
+    mid:  {left:'461px',top:'207px',width:'614px',height:'276px',borderRadius:'20px'},   // 40%
     icon: {left:'28px',top:'28px',width:'100px',height:'100px',borderRadius:'50%'}
   };
   let aboutTimer = 0, revealTimer = 0;
@@ -663,12 +663,20 @@ $('ksk').innerHTML = $('sk').innerHTML;
     Object.assign(aboutPortrait.style, POS[k]);
     s2.dataset.phase = k;
     aboutTitle.style.transition = 'opacity .6s';
-    aboutTitle.style.opacity = k === 'icon' ? '1' : '0';
+    aboutTitle.style.opacity = k === 'mid' ? '0' : '1';
   }
   function startExplosion() {
     if(screen2Visible || state === 'exploding') return;
     state = 'exploding'; fusingT = FUSE_DUR; fusePhase = 0; exploded = false; parts = [];
     tap.style.pointerEvents = 'none'; tap.tabIndex = -1;
+    try { const A = window.__bAC = window.__bAC || new (window.AudioContext||window.webkitAudioContext)(); A.resume();
+      const n = A.currentTime, b = A.createBuffer(1, A.sampleRate*1.6|0, A.sampleRate), d = b.getChannelData(0); for(let i=0;i<d.length;i++) d[i]=Math.random()*2-1;
+      const s = A.createBufferSource(), f = A.createBiquadFilter(), g = A.createGain(), o = A.createOscillator(), og = A.createGain(); s.buffer = b;
+      f.type='lowpass'; f.frequency.setValueAtTime(2200,n); f.frequency.exponentialRampToValueAtTime(60,n+1.4);
+      g.gain.setValueAtTime(.9,n); g.gain.exponentialRampToValueAtTime(.001,n+1.5);
+      o.frequency.setValueAtTime(110,n); o.frequency.exponentialRampToValueAtTime(30,n+.8); og.gain.setValueAtTime(.8,n); og.gain.exponentialRampToValueAtTime(.001,n+.9);
+      s.connect(f); f.connect(g); g.connect(A.destination); o.connect(og); og.connect(A.destination); s.start(); o.start(); o.stop(n+1);
+    } catch(e) {}
     aboutMusic.currentTime = 0;
     aboutMusic.play().catch(() => { s2.dataset.audio = 'blocked'; });
   }
