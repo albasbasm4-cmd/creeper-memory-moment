@@ -1,11 +1,11 @@
 {
   "version": 1,
-  "asset_id": "cc268c54-e72f-401f-96a9-7bcec8ed6ef6",
+  "asset_id": "7f448ce5-82c5-4f18-b710-9249ec9b92f9",
   "project_id": "804e9604-357b-4368-8cee-f779f741a198",
-  "url": "/__l5e/assets-v1/cc268c54-e72f-401f-96a9-7bcec8ed6ef6/careless-whisper.mp3",
-  "r2_key": "a/v1/804e9604-357b-4368-8cee-f779f741a198/cc268c54-e72f-401f-96a9-7bcec8ed6ef6/careless-whisper.mp3",
+  "url": "/__l5e/assets-v1/7f448ce5-82c5-4f18-b710-9249ec9b92f9/careless-whisper.mp3",
+  "r2_key": "a/v1/804e9604-357b-4368-8cee-f779f741a198/7f448ce5-82c5-4f18-b710-9249ec9b92f9/careless-whisper.mp3",
   "original_filename": "careless-whisper.mp3",
-  "size": 496867,
+  "size": 431276,
   "content_type": "audio/mpeg",
-  "created_at": "2026-10-31T08:44:36Z"
+  "created_at": "2026-10-31T08:51:18Z"
 }
