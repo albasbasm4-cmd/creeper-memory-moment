@@ -512,7 +512,7 @@ $('ksk').innerHTML = $('sk').innerHTML;
   s2.id = 'aboutScreen';
   s2.setAttribute('aria-label', 'about us');
   s2.style.cssText = 'position:absolute;inset:0;z-index:50;background:#000;opacity:0;pointer-events:none;overflow:hidden;transition:none;--about-foreground:#fff';
-  s2.innerHTML = '<h1 id="aboutTitle" dir="ltr" style="position:absolute;left:150px;right:150px;top:25px;margin:0;text-align:center;color:var(--about-foreground);font:800 44px Cairo,sans-serif;letter-spacing:0;opacity:0">about us</h1><img id="aboutPortrait" alt="الصورة الشخصية" draggable="false" style="position:absolute;left:115px;top:100px;width:1306px;height:570px;object-fit:cover;object-position:center 15%;display:block;border-radius:24px;cursor:pointer;box-shadow:0 10px 40px rgba(0,0,0,.5)" src="/__l5e/assets-v1/e80a0aef-4a65-4a0b-b7f1-821176eb4b28/about-photo.jpg"><audio id="aboutMusic" preload="auto" src="/__l5e/assets-v1/7f448ce5-82c5-4f18-b710-9249ec9b92f9/careless-whisper.mp3"></audio><button id="aboutHome" aria-label="الرئيسية" style="position:absolute;right:28px;top:28px;width:84px;height:76px;border-radius:24px;border:4px solid #1b9bf2;background:linear-gradient(#3cbcff,#0e86e0);box-shadow:0 6px 0 #0a5a9c;cursor:pointer;display:grid;place-items:center;padding:0;z-index:3"><svg viewBox="0 0 24 24" width="46" height="46" fill="#fff"><path d="M12 3 2 12h3v8h5v-6h4v6h5v-8h3z"/></svg></button>';
+  s2.innerHTML = '<h1 id="aboutTitle" dir="ltr" style="position:absolute;left:150px;right:150px;top:25px;margin:0;text-align:center;color:var(--about-foreground);font:800 44px Cairo,sans-serif;letter-spacing:0;opacity:0">about us</h1><img id="aboutPortrait" alt="الصورة الشخصية" draggable="false" style="position:absolute;left:115px;top:90px;width:1306px;height:601px;object-fit:cover;object-position:center 15%;display:block;border-radius:24px;cursor:pointer;box-shadow:0 10px 40px rgba(0,0,0,.5)" src="/__l5e/assets-v1/e80a0aef-4a65-4a0b-b7f1-821176eb4b28/about-photo.jpg"><audio id="aboutMusic" preload="auto" src="/__l5e/assets-v1/7f448ce5-82c5-4f18-b710-9249ec9b92f9/careless-whisper.mp3"></audio><button id="aboutHome" aria-label="الرئيسية" style="position:absolute;right:28px;top:28px;width:84px;height:76px;border-radius:24px;border:4px solid #1b9bf2;background:linear-gradient(#3cbcff,#0e86e0);box-shadow:0 6px 0 #0a5a9c;cursor:pointer;display:grid;place-items:center;padding:0;z-index:3"><svg viewBox="0 0 24 24" width="46" height="46" fill="#fff"><path d="M12 3 2 12h3v8h5v-6h4v6h5v-8h3z"/></svg></button><div id="aboutText" dir="ltr"></div>';
   s2.dataset.phase = 'idle';
   stage.appendChild(s2);
 
@@ -638,12 +638,136 @@ $('ksk').innerHTML = $('sk').innerHTML;
   let fusePhase = 0, fusingT = 0;
   const FUSE_DUR = 1.2;
 
-  const ABOUT_HOLD_MS = 2000;
-  const ABOUT_SHRINK_MS = 1500;
   const aboutPortrait = s2.querySelector('#aboutPortrait');
   const aboutTitle = s2.querySelector('#aboutTitle');
   const aboutMusic = s2.querySelector('#aboutMusic');
+  const aboutText = s2.querySelector('#aboutText');
+  buildAboutText(aboutText);
+  aboutPortrait.style.zIndex = '2'; /* photo above the text panel; home button (z:3) above both */
+  /* ---------- About Us story text (shown where the photo was) ---------- */
+  function buildAboutText(box) {
+    const CSS = [
+      '#aboutText{position:absolute;left:115px;right:115px;top:90px;bottom:0;overflow-y:auto;overflow-x:hidden;',
+      'padding:12px 44px 80px;color:#fff;text-align:center;opacity:0;pointer-events:none;z-index:1;',
+      'scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.35) transparent;-webkit-overflow-scrolling:touch}',
+      '#aboutText::-webkit-scrollbar{width:8px}',
+      '#aboutText::-webkit-scrollbar-track{background:transparent}',
+      '#aboutText::-webkit-scrollbar-thumb{background:rgba(255,255,255,.3);border-radius:4px}',
+      '#aboutText .inner{max-width:980px;margin:0 auto}',
+      '#aboutText .tagline{font:900 34px/1.5 Cairo,sans-serif;color:#4df3ff;margin:10px 0 8px;text-shadow:0 2px 0 rgba(0,0,0,.45)}',
+      '#aboutText h2{font:800 30px/1.35 Cairo,sans-serif;color:#4df3ff;margin:34px 0 12px;padding-bottom:8px;border-bottom:2px solid rgba(77,243,255,.25)}',
+      '#aboutText h3{font:800 26px/1.35 Cairo,sans-serif;margin:24px 0 8px;color:#fff}',
+      '#aboutText p{font:600 21px/1.8 Cairo,sans-serif;color:rgba(255,255,255,.93);margin:0 0 14px}',
+      '#aboutText ul{text-align:left;display:inline-block;margin:0 auto 14px;padding-left:26px}',
+      '#aboutText li{font:600 21px/1.7 Cairo,sans-serif;color:rgba(255,255,255,.93);margin-bottom:8px}',
+      '#aboutText .quote{font:800 23px/1.6 Cairo,sans-serif;color:#ffd84a;margin:16px 0}',
+      '#aboutText .credits{display:inline-block;text-align:left;background:rgba(255,255,255,.07);border:1px solid rgba(77,243,255,.3);border-radius:16px;padding:14px 26px;margin:4px 0 16px}',
+      '#aboutText .credits div{font:700 21px/1.9 Cairo,sans-serif}',
+      '#aboutText .credits b{color:#4df3ff}',
+      '#aboutText .motto{font:900 26px/1.5 Cairo,sans-serif;color:#4df3ff;margin:20px 0 8px}',
+      '#aboutText .copyright{margin-top:38px;font:700 19px/1.4 Cairo,sans-serif;color:rgba(255,255,255,.65)}'
+    ].join('');
+
+    const p   = t => '<p>' + t + '</p>';
+    const ul  = items => '<ul>' + items.map(i => '<li>' + i + '</li>').join('') + '</ul>';
+    const h2  = t => '<h2>' + t + '</h2>';
+    const h3  = t => '<h3>' + t + '</h3>';
+
+    const html = [
+      '<style>' + CSS + '</style>',
+      '<div class="inner">',
+      '<div class="tagline">Preserving Local Traditions.<br>Bringing People Together.</div>',
+
+      h2('Our Story'),
+      p('This game was created with a simple yet meaningful purpose: to preserve traditional local card games and bring them into the digital world.'),
+      p('Developed around the rules, names, and playing styles familiar to our community, this project aims to maintain the original spirit of these games while making them more accessible through modern technology.'),
+      p('Our primary goal is to provide a convenient local multiplayer experience that allows friends and family to enjoy their favorite card games together without the need to carry or bring physical cards.'),
+      p('The game serves as a temporary and convenient digital alternative to physical card games, allowing players to access their favorite games whenever and wherever they want, using their devices.'),
+      p('We believe technology should make traditional experiences more accessible without taking away what makes them special.'),
+
+      h2('Our Local Gaming Identity'),
+      p('Card games often have different names, rules, and variations depending on the region and community in which they are played. We believe these local differences deserve recognition and preservation.'),
+      p('Rather than replacing our traditional terminology with internationally recognized names, we have chosen to retain the names and rules that are familiar to our community.'),
+      p('Some examples include:'),
+      ul([
+        '<b>Tarb (\u062a\u0631\u0628)</b>: Our local name for the game commonly known as Kout.',
+        '<b>187</b>: The name by which this particular game is locally recognized in our community.',
+        '<b>Bu Ghad (\u0628\u0648 \u063a\u0636)</b>: Our local variation of the game commonly known as UNO Joker.'
+      ]),
+      p('These names represent more than just different games. They reflect our community\u2019s gaming culture, shared experiences, and traditions.'),
+
+      h2('Understanding Our Games'),
+      h3('Bu Ghad (\u0628\u0648 \u063a\u0636)'),
+      p('One of the distinctive features of our local gaming culture is the unique way Bu Ghad is played.'),
+      p('The game revolves around the Joker card and a special interaction involving observation, deception, and subtle communication between players.'),
+      p('The player holding the Joker must discreetly signal to the player sitting opposite them through a gesture locally known as <b>Ghad</b>. The challenge is to communicate this signal without being detected by the other players.'),
+      p('The game continues until only one player remains. At that point, the final player gets one last opportunity to identify the person holding the Joker.'),
+      ul([
+        'If the identification is correct, the Joker holder loses.',
+        'If the identification is incorrect, the final player loses instead.'
+      ]),
+      p('This distinctive mechanic gives our local version its own character and makes it different from other variations of the game.'),
+
+      h2('Our Vision &amp; Mission'),
+      p('Our vision is to preserve traditional local card games and make them accessible to future generations through modern technology, without losing the unique rules, names, and social experiences that define them.'),
+      p('Our mission is to create a convenient and enjoyable digital environment where traditional games can continue to bring people together.'),
+      p('We aim to keep improving the experience while respecting the original identity of every game we introduce.'),
+
+      h2('Player-Created Challenges'),
+      p('We recognize that part of the enjoyment of multiplayer games comes from the creativity and friendly competition between players.'),
+      p('Players are free to introduce their own personal challenges, friendly competitions, or additional rules while playing together.'),
+      p('However, these activities are entirely optional, are not part of the official game rules, and are independently arranged by the players.'),
+      p('Any additional challenges must remain consistent with our responsible entertainment principles and must never involve gambling or financial stakes.'),
+
+      h2('Responsible Entertainment &amp; No-Gambling Policy'),
+      p('This game was developed exclusively for entertainment, social interaction, and the preservation of local gaming traditions. It is not intended to facilitate gambling or betting in any form.'),
+      p('Gambling and betting are strictly prohibited in connection with this game.'),
+      p('Players must not use the game for financial wagers, monetary challenges, or competitions involving money or anything of monetary value.'),
+      p('This prohibition also extends to indirect or informal arrangements that effectively constitute gambling, including playing for a predetermined cash prize, betting a specific amount, or making financial commitments based on the outcome of a match.'),
+      p('All player-created challenges and competitions must remain purely recreational and must never involve financial stakes or gambling-related arrangements.'),
+      p('Our intention is to maintain an enjoyable environment where competition remains friendly and the purpose of playing remains entertainment.'),
+
+      h2('Fair Play &amp; Respect'),
+      p('We believe that the true value of a game lies in the experience, not merely in winning.'),
+      p('We encourage fair play, mutual respect, honesty, and friendly competition. Every player should have the opportunity to enjoy the game in a respectful and welcoming environment.'),
+      p('Winning is part of the competition, but respect and enjoyment should always come first.'),
+
+      h2('Community &amp; Feedback'),
+      p('This project is continuously evolving, and player feedback plays an important role in its development.'),
+      p('We welcome suggestions, constructive criticism, and new ideas that can help improve the gaming experience while preserving the original local rules and identity of each game.'),
+      p('Your feedback helps us identify what works, what needs improvement, and what new features could make the experience better for everyone.'),
+
+      h2('Privacy &amp; Data'),
+      p('We believe players should have a clear understanding of how their information is handled.'),
+      p('We are committed to respecting user privacy and handling personal information responsibly. We encourage players to understand how their information may be collected, used, and protected through the game\u2019s applicable privacy practices.'),
+
+      h2('Project Credits &amp; Release Information'),
+      '<div class="credits">' +
+        '<div><b>Project Name:</b> Ikout</div>' +
+        '<div><b>Designed and Developed by:</b> Al-Abbas</div>' +
+        '<div><b>Year of Release:</b> 2026</div>' +
+        '<div><b>Release Date:</b> October 31, 2026</div>' +
+      '</div>',
+      p('This game was independently designed and developed by Al-Abbas and released in 2026.'),
+      p('It is primarily intended for local multiplayer use, serving as a convenient digital alternative to physical card games.'),
+      p('Its purpose is to provide players with temporary, on-demand access to their favorite local card games without the need to carry or bring physical cards.'),
+      p('The game is designed to complement the traditional playing experience, not to replace the social value and enjoyment of playing together in person.'),
+      '<div class="quote">A digital alternative to physical cards, wherever and whenever you need it.</div>',
+
+      h2('Thank You for Being Part of Our Journey'),
+      p('Thank you for taking the time to explore and play our game.'),
+      p('Whether you are revisiting familiar games, introducing them to new friends, or simply enjoying a multiplayer session, we hope this experience brings people together and helps keep our local traditions alive in a modern digital format.'),
+      p('Your enjoyment and support encourage us to continue developing and improving the game.'),
+      '<div class="motto">Play Together. Enjoy Responsibly. Keep Our Traditions Alive.</div>',
+      '<div class="copyright">\u00a9 2026 Al-Abbas. All rights reserved.</div>',
+      '</div>'
+    ].join('');
+
+    box.innerHTML = html;
+  }
+
   tap.id = 'greenCreeperTap';
+
   tap.setAttribute('role', 'button');
   tap.setAttribute('aria-label', 'الكريبر الأخضر');
   tap.tabIndex = 0;
@@ -653,17 +777,21 @@ $('ksk').innerHTML = $('sk').innerHTML;
 
   const aboutHome = s2.querySelector('#aboutHome');
   const POS = {
-    big:  {left:'115px',top:'100px',width:'1306px',height:'570px',borderRadius:'24px'},   // 85%
-    mid:  {left:'461px',top:'207px',width:'614px',height:'276px',borderRadius:'20px'},   // 40%
+    big:  {left:'115px',top:'90px',width:'1306px',height:'601px',borderRadius:'24px'},   // fills from just under the title line to the bottom
     icon: {left:'28px',top:'28px',width:'100px',height:'100px',borderRadius:'50%'}
   };
   let aboutTimer = 0, revealTimer = 0;
+  let userTouched = false;
   function setPos(k, animate) {
     aboutPortrait.style.transition = animate ? 'left 1.5s cubic-bezier(.4,0,.2,1),top 1.5s cubic-bezier(.4,0,.2,1),width 1.5s cubic-bezier(.4,0,.2,1),height 1.5s cubic-bezier(.4,0,.2,1),border-radius 1.5s' : 'none';
     Object.assign(aboutPortrait.style, POS[k]);
     s2.dataset.phase = k;
     aboutTitle.style.transition = 'opacity .6s';
-    aboutTitle.style.opacity = k === 'mid' ? '0' : '1';
+    aboutTitle.style.opacity = '1';
+    const showText = k === 'icon';
+    aboutText.style.transition = showText ? 'opacity .9s ease .35s' : 'opacity .45s ease';
+    aboutText.style.opacity = showText ? '1' : '0';
+    aboutText.style.pointerEvents = showText ? 'auto' : 'none';
   }
   function startExplosion() {
     if(screen2Visible || state === 'exploding') return;
@@ -686,8 +814,10 @@ $('ksk').innerHTML = $('sk').innerHTML;
     ctx2.clearRect(0,0,SW,SH);
     setPos('big', false);
     s2.style.opacity = '1'; s2.style.pointerEvents = 'all';
+    userTouched = false;
     clearTimeout(aboutTimer);
-    aboutTimer = setTimeout(() => setPos('icon', true), 4000);
+    /* hold the photo for 5 seconds, then shrink gradually to the corner icon */
+    aboutTimer = setTimeout(() => setPos('icon', true), 5000);
   }
   function goHome() {
     clearTimeout(aboutTimer); clearTimeout(revealTimer);
@@ -701,11 +831,23 @@ $('ksk').innerHTML = $('sk').innerHTML;
   aboutPortrait.addEventListener('click', e => {
     e.stopPropagation();
     const p = s2.dataset.phase;
-    if(p === 'icon') setPos('mid', true);
-    else if(p === 'mid') setPos('icon', true);
+    /* tap the corner icon to restore the photo, tap the photo again to shrink back */
+    if(p === 'icon') setPos('big', true);
+    else if(p === 'big') setPos('icon', true);
   });
   aboutHome.addEventListener('click', e => { e.stopPropagation(); goHome(); });
-  aboutMusic.addEventListener('ended', () => { if(screen2Visible || state === 'exploding') goHome(); });
+
+  /* any interaction (taps, scrolling the story text) keeps the user here;
+     only a visit where nothing is touched returns home when the song ends */
+  const markTouch = () => { userTouched = true; };
+  s2.addEventListener('pointerdown', markTouch, true);
+  s2.addEventListener('wheel', markTouch, { capture: true, passive: true });
+  s2.addEventListener('touchstart', markTouch, { capture: true, passive: true });
+  s2.addEventListener('scroll', markTouch, true);
+  aboutMusic.addEventListener('ended', () => {
+    if(screen2Visible) { if(!userTouched) goHome(); return; }
+    if(state === 'exploding') goHome();
+  });
 
   /* كانفاس مخصص للـ hit-test — بنفس حجم cv لكن مخفي */
   const hitCv = document.createElement('canvas');
